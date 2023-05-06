@@ -1,0 +1,269 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Crea una base de datos SQL</title>
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static',filename='images/logo.png')}}"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='styles/front.css')}}"
+    />
+    <script
+      src="https://kit.fontawesome.com/10a83cea79.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        setTimeout(function () {
+          $(".alert").fadeOut(600);
+        }, 5000);
+      });
+    </script>
+    <script>
+      function update() {
+        var element = document.getElementById("progress");
+        var width = 1;
+        var identity = setInterval(scene, 8);
+        function scene() {
+          if (width >= 100) {
+            clearInterval(identity);
+            element.style.visibility = "hidden";
+            element.style.opacity = 0;
+            element.style.transition =
+              "visibility 0s 0.8s, opacity 0.8s linear";
+          } else {
+            width += 0.5;
+            element.style.width = width + "%";
+            element.style.visibility = "visible";
+            element.style.opacity = 1;
+            element.style.transition = "opacity 0.8s linear";
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    {% with messages = get_flashed_messages(category_filter=["notify"]) %} {% if
+    messages %} {% for message in messages %}
+    <div class="alert"><div>{{message}}</div></div>
+    {% endfor %} {% endif %} {% endwith %}
+    <div class="bar">
+      <div id="progress"></div>
+    </div>
+    <header class="header">
+      <div class="header-container">
+        <nav class="nav">
+          <div class="nav-logo">
+            <a href="#" class="nav-logo__link" title="Recargar página de inicio"
+              ><object
+                class="nav-logo__image"
+                data="{{url_for('static',filename='images/logo.png')}}"
+              ></object
+              >Softness</a
+            >
+          </div>
+          <div class="nav-menu">
+            <ul class="nav-menu__item">
+              <li>
+                <div class="switch">
+                  <div class="switch-content">
+                    <input id="mark" type="checkbox" onchange="dark()" />
+                    <label id="mark-label" for="mark"></label>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <a href="https://github.com/203721" class="nav-menu__link"
+                  ><i class="fa-brands fa-github"></i>&nbsp;Github</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div class="hero">
+          <div class="hero-text">
+            <h1 class="hero-text__main">Crea una base de datos SQL,</h1>
+            <p class="hero-text__subs">siguiendo este flujo...</p>
+            <div class="hero-btn-1">
+              <form class="form" method="POST">
+                <ul class="input-list">
+                  <li>
+                    <input {% with messages =
+                    get_flashed_messages(category_filter=["text"]) %} {% if
+                    messages %} {% for message in messages %} value =
+                    {{message}} {% endfor %} {% endif %} {% endwith %}
+                    class="form__input" name="step_1" type="text" placeholder="1. Crea tu base de datos (CREATE DATABASE)." />
+                  </li>
+                  <li>
+                    <input {% with messages =
+                    get_flashed_messages(category_filter=["text"]) %} {% if
+                    messages %} {% for message in messages %} value =
+                    {{message}} {% endfor %} {% endif %} {% endwith %}
+                    class="form__input" name="step_2" type="text" placeholder="2. Ubícate en tu base de datos (USE)." />
+                  </li>
+                  <li>
+                    <input {% with messages =
+                    get_flashed_messages(category_filter=["text"]) %} {% if
+                    messages %} {% for message in messages %} value =
+                    {{message}} {% endfor %} {% endif %} {% endwith %}
+                    class="form__input" name="step_3" type="text" placeholder="3. Crea una tabla en tu base de datos (CREATE TABLE)." />
+                  </li>
+                  <li>
+                    <input {% with messages =
+                    get_flashed_messages(category_filter=["text"]) %} {% if
+                    messages %} {% for message in messages %} value =
+                    {{message}} {% endfor %} {% endif %} {% endwith %}
+                    class="form__input" name="step_4" type="text" placeholder="4. Añade entradas a tu base de datos (INSERT INTO)." />
+                  </li>
+                  <li>
+                    <input {% with messages =
+                    get_flashed_messages(category_filter=["text"]) %} {% if
+                    messages %} {% for message in messages %} value =
+                    {{message}} {% endfor %} {% endif %} {% endwith %}
+                    class="form__input" name="step_5" type="text" placeholder="5. Modifica o elimina tus entradas (UPDATE, DELETE)." />
+                  </li>
+                  <li>
+                    <input
+                      onclick="update()"
+                      class="btn"
+                      type="submit"
+                      value="Ejecutar"
+                    />
+                  </li>
+                </ul>
+              </form>
+            </div>
+          </div>
+          <div class="hover-animation">
+            <div class="hover-animation__image">
+              <figure>
+                <img src="{{url_for('static',filename='images/chain.png')}}" />
+              </figure>
+            </div>
+          </div>
+          <div class="hero-2">
+            <p class="hero-text__subs">Analizadores y salidas.</p>
+            <div>
+              <form method="POST">
+                <input
+                  onclick="update()"
+                  class="btn"
+                  type="submit"
+                  value="Léxico"
+                  name="btn_1"
+                />
+                <textarea
+                  name="area_1"
+                  class="area"
+                  placeholder="   Análisis léxico"
+                >{{ value_1 }}</textarea>
+              </form>
+            </div>
+            <br />
+            <div>
+              <form method="POST">
+                <input
+                  onclick="update()"
+                  class="btn"
+                  type="submit"
+                  value="Sintáctico"
+                  name="btn_2"
+                />
+                <textarea
+                  name="area_2"
+                  class="area"
+                  placeholder="   Análisis sintáctico"
+                >{{ value_2 }}</textarea>
+              </form>
+            </div>
+            <br />
+            <div>
+              <form method="POST">
+                <input
+                  onclick="update()"
+                  class="btn"
+                  type="submit"
+                  value="Semántico"
+                  name="btn_3"
+                />
+                <textarea
+                  name="area_3"
+                  class="area"
+                  placeholder="   Análisis semántico"
+                >{{ value_3 }}</textarea>
+              </form>
+            </div>
+          </div>
+          <div class="footer-mobile">
+            <div class="footer-container">
+              <div class="footer-text">
+                <p>Bryan Alexander Morales Roblero</p>
+                <h3>AFD - Extractor de URL's externos</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <footer class="footer-desktop">
+      <div class="footer-container">
+        <div class="footer-text">
+          <p>Bryan Alexander Morales Roblero</p>
+          <h3>Análisis léxico, sintáctico y semántico</h3>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script>
+    checkbox = document.getElementById("mark");
+    checkbox.checked = eval(window.localStorage.getItem(checkbox.id));
+    checkbox.addEventListener("change", function () {
+      window.localStorage.setItem(checkbox.id, checkbox.checked);
+    });
+    function dark() {
+      const background = "dark-background";
+      const hover = "dark-hover";
+      const text = "dark-text";
+      const shadow = "dark-shadow";
+      const shadows = "dark-shadows";
+      const inner = "dark-inner";
+      var body = document.body;
+      body.classList.toggle(background);
+      var menu = document.getElementsByClassName("nav-menu__link");
+      menu[0].classList.toggle(hover);
+      var logo = document.getElementsByClassName("nav-logo__link");
+      for (let i = 0; i < logo.length; i++) {
+        logo[i].classList.toggle(text);
+      }
+      var main = document.getElementsByClassName("hero-text__main");
+      for (let i = 0; i < main.length; i++) {
+        main[i].classList.toggle(text);
+      }
+      var subs = document.getElementsByClassName("hero-text__subs");
+      for (let i = 0; i < subs.length; i++) {
+        subs[i].classList.toggle(text);
+      }
+      var changer = document.getElementById("mark-label");
+      changer.classList.toggle(shadow);
+      var btn = document.getElementsByClassName("btn");
+      for (let i = 0; i < btn.length; i++) {
+        btn[i].classList.toggle(shadows);
+      }
+      var input = document.getElementsByClassName("form__input");
+      for (let i = 0; i < input.length; i++) {
+        input[i].classList.toggle(inner);
+      }
+      var area = document.getElementsByClassName("area");
+      for (let i = 0; i < area.length; i++) {
+        area[i].classList.toggle(inner);
+      }
+    }
+    if (checkbox.checked) {
+      dark();
+    }
+  </script>
+</html>
