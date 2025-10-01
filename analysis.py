@@ -372,12 +372,17 @@ def semantic_analyzer(p, connection):
     message = ""
 
     if action == "create_database":
-        success = not check_database_exists(result["name"], connection)
-        message = (
-            "Database created successfully"
-            if success
-            else "Error: Database already exists"
-        )
+        db_exists = check_database_exists(result["name"], connection)
+        if not db_exists:
+            success = create_database_entry(result["name"], connection)
+            message = (
+                "Database created successfully"
+                if success
+                else "Error: Failed to create database"
+            )
+        else:
+            success = False
+            message = "Error: Database already exists"
     elif action == "use":
         success = check_database_exists(result["name"], connection)
         message = "Using database" if success else "Error: Database does not exist"
@@ -424,14 +429,47 @@ def semantic_analyzer(p, connection):
 
 
 def check_database_exists(database_name, connection):
-    """SQLite: Simula verificación de base de datos (siempre True para demo)"""
-    # SQLite usa un solo archivo de BD, simulamos que siempre existe
-    return True
+    """SQLite: Verifica si existe una 'base de datos' simulada usando una tabla de metadatos"""
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS _databases_meta (
+                name TEXT PRIMARY KEY,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """
+        )
+        connection.commit()
+
+        cursor.execute(
+            "SELECT name FROM _databases_meta WHERE name=?;", (database_name,)
+        )
+        result = cursor.fetchone()
+        cursor.close()
+        return result is not None
+    except Exception as e:
+        print(f"Error checking database: {e}")
+        return False
+
+
+def create_database_entry(database_name, connection):
+    """SQLite: Registra una nueva 'base de datos' simulada"""
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            "INSERT INTO _databases_meta (name) VALUES (?);", (database_name,)
+        )
+        connection.commit()
+        cursor.close()
+        return True
+    except Exception as e:
+        print(f"Error creating database entry: {e}")
+        return False
 
 
 def get_current_database(connection):
-    """SQLite: Retorna nombre de BD por defecto"""
-    # SQLite no tiene concepto de "USE database", usamos una BD por defecto
+    """SQLite: Retorna el nombre de la BD actual (simulado)"""
     return "main"
 
 
@@ -441,7 +479,7 @@ def check_table_exists(table_name, connection):
         cursor = connection.cursor()
         cursor.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name=?;",
-            (table_name,)
+            (table_name,),
         )
         result = cursor.fetchone()
         cursor.close()

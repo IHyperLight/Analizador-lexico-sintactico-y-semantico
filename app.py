@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "llave_secreta_demo_analizador_sql_2025")
 
 # Base de datos SQLite persistente
-DB_PATH = os.path.join(os.path.dirname(__file__), 'analizador.db')
+DB_PATH = os.path.join(os.path.dirname(__file__), "analizador.db")
 
 
 def create_db_connection():
@@ -100,11 +100,14 @@ def front():
     semant_result = session.get("semant_result", "")
 
     connection = create_db_connection()
-    
+
     if not connection:
         flash("Error de conexión a la base de datos.", "notify")
         return render_template(
-            "front.html", value_1="", value_2="", value_3="Error de conexión a la base de datos"
+            "front.html",
+            value_1="",
+            value_2="",
+            value_3="Error de conexión a la base de datos",
         )
 
     if request.method == "POST":
@@ -191,7 +194,7 @@ def front():
                 results[f"{n}_result"] = ""
             session.update(results)
             flash("Error, revisa los campos faltantes o introducidos.", "notify")
-        
+
         connection.close()
         return redirect(url_for("front"))
 
