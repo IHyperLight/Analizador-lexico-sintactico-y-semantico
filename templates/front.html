@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Crea una base de datos SQL</title>
+        <title>Crea una base de datos MySQL</title>
         <link
             rel="shortcut icon"
             href="{{url_for('static',filename='images/logo.png')}}"
@@ -100,7 +100,7 @@
                 <div class="hero">
                     <div class="hero-text">
                         <h1 class="hero-text__main">
-                            Crea una base de datos SQL,
+                            Crea una base de datos MySQL,
                         </h1>
                         <p class="hero-text__subs">siguiendo este flujo...</p>
                         <div class="hero-btn-1">
@@ -113,8 +113,8 @@
                                         messages %} value = {{message}} {%
                                         endfor %} {% endif %} {% endwith %}
                                         class="form__input" name="step_1"
-                                        type="text" placeholder="1. Crea tu base de datos (CREATE DATABASE)."
-                                        />
+                                        type="text" placeholder="1. Crea tu base
+                                        de datos (CREATE DATABASE)." />
                                     </li>
                                     <li>
                                         <input {% with messages =
@@ -123,8 +123,8 @@
                                         messages %} value = {{message}} {%
                                         endfor %} {% endif %} {% endwith %}
                                         class="form__input" name="step_2"
-                                        type="text" placeholder="2. Ubícate en tu base de datos (USE)."
-                                        />
+                                        type="text" placeholder="2. Ubícate en
+                                        tu base de datos (USE)." />
                                     </li>
                                     <li>
                                         <input {% with messages =
@@ -133,8 +133,9 @@
                                         messages %} value = {{message}} {%
                                         endfor %} {% endif %} {% endwith %}
                                         class="form__input" name="step_3"
-                                        type="text" placeholder="3. Crea una tabla en tu base de datos (CREATE TABLE)."
-                                        />
+                                        type="text" placeholder="3. Crea una
+                                        tabla en tu base de datos (CREATE
+                                        TABLE)." />
                                     </li>
                                     <li>
                                         <input {% with messages =
@@ -143,8 +144,9 @@
                                         messages %} value = {{message}} {%
                                         endfor %} {% endif %} {% endwith %}
                                         class="form__input" name="step_4"
-                                        type="text" placeholder="4. Añade entradas a tu base de datos (INSERT INTO)."
-                                        />
+                                        type="text" placeholder="4. Añade
+                                        entradas a tu base de datos (INSERT
+                                        INTO)." />
                                     </li>
                                     <li>
                                         <input {% with messages =
@@ -153,7 +155,8 @@
                                         messages %} value = {{message}} {%
                                         endfor %} {% endif %} {% endwith %}
                                         class="form__input" name="step_5"
-                                        type="text" placeholder="5. Modifica o elimina tus entradas (UPDATE, DELETE)."
+                                        type="text" placeholder="5. Modifica o
+                                        elimina tus entradas (UPDATE, DELETE)."
                                         />
                                     </li>
                                     <li>
@@ -181,6 +184,13 @@
                         <p class="hero-text__subs">Analizadores y salidas.</p>
                         <div>
                             <form method="POST">
+                                <textarea
+                                    name="area_1"
+                                    class="area"
+                                    placeholder="Análisis léxico"
+                                >
+{{ value_1 if value_1 else '' }}</textarea
+                                >
                                 <input
                                     onclick="update()"
                                     class="btn"
@@ -188,18 +198,18 @@
                                     value="Léxico"
                                     name="btn_1"
                                 />
-                                <textarea
-                                    name="area_1"
-                                    class="area"
-                                    placeholder="   Análisis léxico"
-                                >
-{{ value_1 }}</textarea
-                                >
                             </form>
                         </div>
                         <br />
                         <div>
                             <form method="POST">
+                                <textarea
+                                    name="area_2"
+                                    class="area"
+                                    placeholder="Análisis sintáctico"
+                                >
+{{ value_2 if value_2 else '' }}</textarea
+                                >
                                 <input
                                     onclick="update()"
                                     class="btn"
@@ -207,18 +217,18 @@
                                     value="Sintáctico"
                                     name="btn_2"
                                 />
-                                <textarea
-                                    name="area_2"
-                                    class="area"
-                                    placeholder="   Análisis sintáctico"
-                                >
-{{ value_2 }}</textarea
-                                >
                             </form>
                         </div>
                         <br />
                         <div>
                             <form method="POST">
+                                <textarea
+                                    name="area_3"
+                                    class="area"
+                                    placeholder="Análisis semántico"
+                                >
+{{ value_3 if value_3 else '' }}</textarea
+                                >
                                 <input
                                     onclick="update()"
                                     class="btn"
@@ -226,13 +236,6 @@
                                     value="Semántico"
                                     name="btn_3"
                                 />
-                                <textarea
-                                    name="area_3"
-                                    class="area"
-                                    placeholder="   Análisis semántico"
-                                >
-{{ value_3 }}</textarea
-                                >
                             </form>
                         </div>
                     </div>

@@ -25,8 +25,17 @@ def create_db_connection():
 def execute_query(connection, query):
     """Ejecuta query en SQLite - Adaptado para sintaxis compatible"""
     try:
+        # Detectar comandos que SQLite no soporta pero que simulamos
+        query_upper = query.strip().upper()
+
+        # CREATE DATABASE y USE DATABASE solo se simulan, no se ejecutan
+        if query_upper.startswith("CREATE DATABASE") or query_upper.startswith("USE "):
+            print(f"Simulated command: {query}")
+            result = "Éxito, sentencias ejecutadas correctamente"
+            return result
+
+        # Ejecutar otros comandos normalmente
         cursor = connection.cursor()
-        # SQLite no soporta algunos comandos MySQL, pero los simularemos
         cursor.execute(query)
         connection.commit()
         print("Query executed successfully")
