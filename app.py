@@ -104,10 +104,6 @@ def front():
     results = {}
     s = []
 
-    lex_result = session.get("lex_result", "")
-    sintact_result = session.get("sintact_result", "")
-    semant_result = session.get("semant_result", "")
-
     connection = create_db_connection()
 
     if not connection:
@@ -120,6 +116,10 @@ def front():
         )
 
     if request.method == "POST":
+        # En POST, obtener valores de la sesión
+        lex_result = session.get("lex_result", "")
+        sintact_result = session.get("sintact_result", "")
+        semant_result = session.get("semant_result", "")
         steps = [
             request.form.get("step_1", ""),
             request.form.get("step_2", ""),
@@ -206,10 +206,15 @@ def front():
 
         connection.close()
         return redirect(url_for("front"))
-
+    
+    # En GET (recarga de página), limpiar la sesión y mostrar campos vacíos
+    session.pop("lex_result", None)
+    session.pop("sintact_result", None)
+    session.pop("semant_result", None)
+    
     connection.close()
     return render_template(
-        "front.html", value_1=lex_result, value_2=sintact_result, value_3=semant_result
+        "front.html", value_1="", value_2="", value_3=""
     )
 
 
