@@ -239,8 +239,7 @@ body::-webkit-scrollbar-corner {
     grid-gap: 2rem;
     justify-content: center;
     align-items: center;
-    height: 200vh;
-    padding-bottom: 100em;
+    padding-bottom: 3rem;
     padding-top: 3em;
 }
 

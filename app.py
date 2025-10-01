@@ -178,7 +178,14 @@ def front():
                     results[result_key] = a
                     session.update(results)
                 flash(message, "notify")
-                return redirect(url_for("front"))
+                # Renderizar directamente con los resultados en lugar de redirect
+                connection.close()
+                return render_template(
+                    "front.html",
+                    value_1=session.get("lex_result", ""),
+                    value_2=session.get("sintact_result", ""),
+                    value_3=session.get("semant_result", "")
+                )
 
         if steps[0]:
             result = logic(connection, steps[0])
@@ -205,7 +212,13 @@ def front():
             flash("Error, revisa los campos faltantes o introducidos.", "notify")
 
         connection.close()
-        return redirect(url_for("front"))
+        # Renderizar con los resultados de la sesión
+        return render_template(
+            "front.html",
+            value_1=session.get("lex_result", ""),
+            value_2=session.get("sintact_result", ""),
+            value_3=session.get("semant_result", "")
+        )
     
     # En GET (recarga de página), limpiar la sesión y mostrar campos vacíos
     session.pop("lex_result", None)
