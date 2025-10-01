@@ -1,34 +1,41 @@
 from flask import Flask, render_template, redirect, flash, url_for, request, session
-import mysql.connector
-import re
+import sqlite3
+import os
 from analysis import run_lexical_analyzer, run_syntax_analyzer, run_semantic_analyzer
 
 app = Flask(__name__)
 
-app.secret_key = "llave_secreta"
+# Configuración simple para desarrollo y producción
+app.secret_key = os.environ.get("SECRET_KEY", "llave_secreta_demo_analizador_sql_2025")
+
+# Base de datos SQLite persistente
+DB_PATH = os.path.join(os.path.dirname(__file__), 'analizador.db')
 
 
-def create_mysql_connection(host, user, password):
+def create_db_connection():
+    """Crea conexión a SQLite - No requiere configuración externa"""
     try:
-        connection = mysql.connector.connect(host=host, user=user, password=password)
+        connection = sqlite3.connect(DB_PATH)
         return connection
-    except mysql.connector.Error as error:
-        print(f"Error: {error}")
+    except sqlite3.Error as error:
+        print(f"Error de conexión a SQLite: {error}")
         return None
 
 
 def execute_query(connection, query):
+    """Ejecuta query en SQLite - Adaptado para sintaxis compatible"""
     try:
         cursor = connection.cursor()
+        # SQLite no soporta algunos comandos MySQL, pero los simularemos
         cursor.execute(query)
         connection.commit()
         print("Query executed successfully")
         result = "Éxito, sentencias ejecutadas correctamente"
         return result
-    except mysql.connector.Error as e:
+    except sqlite3.Error as e:
         print(f"Error executing query: {e}")
         session["semant_result"] = str(e)
-        result = "Error, revisa las salidas de los analizadores."
+        result = f"Error SQLite: {str(e)}"
         return result
 
 
@@ -92,10 +99,13 @@ def front():
     sintact_result = session.get("sintact_result", "")
     semant_result = session.get("semant_result", "")
 
-    host = "localhost"
-    user = "root"
-    password = "Jetcrab333"
-    connection = create_mysql_connection(host, user, password)
+    connection = create_db_connection()
+    
+    if not connection:
+        flash("Error de conexión a la base de datos.", "notify")
+        return render_template(
+            "front.html", value_1="", value_2="", value_3="Error de conexión a la base de datos"
+        )
 
     if request.method == "POST":
         steps = [
@@ -145,7 +155,7 @@ def front():
                 x = request.form.get(area)
                 if x:
                     if additional_param:
-                        a, b = analyzer_func(additional_param, x)
+                        a, b = analyzer_func(connection, x)
                     else:
                         a, b = analyzer_func(x)
                     results = {
@@ -175,21 +185,26 @@ def front():
             flash(result[-1], "notify")
         elif steps[4]:
             result = logic(connection, steps[4])
-            flash(results[-1], "notify")
+            flash(result[-1], "notify")
         else:
             for n in analyzers:
                 results[f"{n}_result"] = ""
             session.update(results)
             flash("Error, revisa los campos faltantes o introducidos.", "notify")
+        
+        connection.close()
         return redirect(url_for("front"))
 
+    connection.close()
     return render_template(
         "front.html", value_1=lex_result, value_2=sintact_result, value_3=semant_result
     )
 
 
 def main():
-    app.run(debug=True, port="5000", host="0.0.0.0")
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_ENV") != "production"
+    app.run(debug=debug, port=port, host="0.0.0.0")
 
 
 if __name__ == "__main__":

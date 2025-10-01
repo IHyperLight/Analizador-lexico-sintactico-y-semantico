@@ -18,6 +18,22 @@ lib/
 lib64/
 parts/
 sdist/
+
+# Render specific
+.render
+
+# Environment variables
+.env
+.env.local
+
+# Parser generated files
+parser.out
+parsetab.py
+
+# SQLite database
+*.db
+*.sqlite
+*.sqlite3
 var/
 wheels/
 pip-wheel-metadata/

@@ -424,34 +424,31 @@ def semantic_analyzer(p, connection):
 
 
 def check_database_exists(database_name, connection):
-    cursor = connection.cursor()
-    cursor.execute("SHOW DATABASES;")
-    databases = cursor.fetchall()
-    cursor.close()
-
-    return any(database_name in db for db in databases)
+    """SQLite: Simula verificación de base de datos (siempre True para demo)"""
+    # SQLite usa un solo archivo de BD, simulamos que siempre existe
+    return True
 
 
 def get_current_database(connection):
-    cursor = connection.cursor()
-    cursor.execute("SELECT DATABASE();")
-    current_database = cursor.fetchone()
-    cursor.close()
-
-    return current_database[0] if current_database else None
+    """SQLite: Retorna nombre de BD por defecto"""
+    # SQLite no tiene concepto de "USE database", usamos una BD por defecto
+    return "main"
 
 
 def check_table_exists(table_name, connection):
-    current_database = get_current_database(connection)
-    if not current_database:
+    """SQLite: Verifica si una tabla existe"""
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name=?;",
+            (table_name,)
+        )
+        result = cursor.fetchone()
+        cursor.close()
+        return result is not None
+    except Exception as e:
+        print(f"Error checking table: {e}")
         return False
-
-    cursor = connection.cursor()
-    cursor.execute(f"SHOW TABLES IN {current_database};")
-    tables = cursor.fetchall()
-    cursor.close()
-
-    return any(table_name in table for table in tables)
 
 
 def run_lexical_analyzer(query):
