@@ -387,40 +387,37 @@ def semantic_analyzer(p, connection):
         success = check_database_exists(result["name"], connection)
         message = "Using database" if success else "Error: Database does not exist"
     elif action == "create_table":
-        success = check_database_exists(
-            get_current_database(connection), connection
-        ) and not check_table_exists(result["name"], connection)
+        # En SQLite, no necesitamos verificar base de datos porque todo está en un solo archivo
+        # Solo verificamos que la tabla no exista ya
+        success = not check_table_exists(result["name"], connection)
         message = (
             "Table created successfully"
             if success
-            else "Error: Table already exists or database does not exist"
+            else "Error: Table already exists"
         )
     elif action == "insert_into":
-        success = check_database_exists(
-            get_current_database(connection), connection
-        ) and check_table_exists(result["table"], connection)
+        # En SQLite, solo verificamos que la tabla exista
+        success = check_table_exists(result["table"], connection)
         message = (
             "Insert operation successful"
             if success
-            else "Error: Table or database does not exist"
+            else "Error: Table does not exist"
         )
     elif action == "update":
-        success = check_database_exists(
-            get_current_database(connection), connection
-        ) and check_table_exists(result["table"], connection)
+        # En SQLite, solo verificamos que la tabla exista
+        success = check_table_exists(result["table"], connection)
         message = (
             "Update operation successful"
             if success
-            else "Error: Table or database does not exist"
+            else "Error: Table does not exist"
         )
     elif action == "delete":
-        success = check_database_exists(
-            get_current_database(connection), connection
-        ) and check_table_exists(result["table"], connection)
+        # En SQLite, solo verificamos que la tabla exista
+        success = check_table_exists(result["table"], connection)
         message = (
             "Delete operation successful"
             if success
-            else "Error: Table or database does not exist"
+            else "Error: Table does not exist"
         )
     else:
         return False, "Error: Invalid action"
@@ -470,6 +467,25 @@ def create_database_entry(database_name, connection):
 
 def get_current_database(connection):
     """SQLite: Retorna el nombre de la BD actual (simulado)"""
+    # Asegurar que existe una base de datos por defecto
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS _databases_meta (
+                name TEXT PRIMARY KEY,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """
+        )
+        cursor.execute(
+            "INSERT OR IGNORE INTO _databases_meta (name) VALUES ('main');"
+        )
+        connection.commit()
+        cursor.close()
+    except Exception as e:
+        print(f"Error initializing default database: {e}")
+    
     return "main"
 
 

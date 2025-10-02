@@ -428,6 +428,20 @@ body::-webkit-scrollbar-corner {
     box-shadow: var(--shadow);
 }
 
+.area::-webkit-scrollbar {
+    width: 0.65em;
+}
+
+.area::-webkit-scrollbar-thumb {
+    background-color: var(--color-purple);
+    border-radius: 0.5rem;
+}
+
+.area::-webkit-scrollbar-track {
+    background: var(--color-light-grey-2);
+    border-radius: 0.5rem;
+}
+
 .input-list {
     list-style-type: none;
     padding: 0;
